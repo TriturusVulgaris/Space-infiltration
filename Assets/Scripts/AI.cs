@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AI : MonoBehaviour
 {
@@ -17,23 +18,24 @@ public class AI : MonoBehaviour
     {
         INVALID = -1,
         STATIC,
+        FOLLOW_PLAYER,
         RANDOM,
     }
 
     public enum e_vigilance
     {
-        INVALID = -1, 
+        INVALID = -1,
         UNAWARE,
         INVESTIGATE,
-        COMBAT, 
-        REASEARCH
+        COMBAT,
+        RESEARCH
     }
 
     public e_state m_state;
     public e_state m_defaultState;
 
-    public e_state m_movePattern;
-    public e_state m_defaultMovePattern;
+    public e_movePattern m_movePattern;
+    public e_movePattern m_defaultMovePattern;
 
     public e_vigilance m_vigilance;
     public e_vigilance m_defaultVigilance;
@@ -43,8 +45,10 @@ public class AI : MonoBehaviour
     public float m_detectionRange;
     public float m_timeInvestigate;
     public float m_timeCombat;
-    public float m_timeReasearch;
+    public float m_timeResearch;
     public float m_timeCalmDown;
+
+    public NavMeshAgent m_agent;
 
     public bool m_isDebug;
 
@@ -54,14 +58,19 @@ public class AI : MonoBehaviour
 
     void EvaluateLocomotion()
     {
-        switch(m_state){ 
-        case e_state.IDLE:
-            break;
-        case e_state.MOVE:
-            break;
-        default:
-            break;
-    }
+        switch (m_state) {
+            case e_state.IDLE:
+                if (m_vigilance != e_vigilance.UNAWARE)
+                {
+                    m_state = e_state.MOVE;
+                }
+                break;
+            case e_state.MOVE:
+                EvaluateMovePattern();
+                break;
+            default:
+                break;
+        }
 
     }
     void EvaluateVigilance()
@@ -69,18 +78,18 @@ public class AI : MonoBehaviour
         switch (m_vigilance)
         {
             case e_vigilance.UNAWARE:
-                if(m_timePlayerBeenVisible > m_timeInvestigate)
+                if (m_timePlayerBeenVisible > m_timeInvestigate)
                 {
                     m_vigilance = e_vigilance.INVESTIGATE;
                 }
                 break;
             case e_vigilance.INVESTIGATE:
-                if (m_timePlayerBeenVisible > m_timeReasearch)
+                if (m_timePlayerBeenVisible > m_timeResearch)
                 {
-                    m_vigilance = e_vigilance.REASEARCH
+                    m_vigilance = e_vigilance.RESEARCH;
                 }
                 break;
-            case e_vigilance.REASEARCH:
+            case e_vigilance.RESEARCH:
                 if (m_timePlayerBeenVisible > m_timeCombat)
                 {
                     m_vigilance = e_vigilance.COMBAT;
@@ -89,7 +98,7 @@ public class AI : MonoBehaviour
             case e_vigilance.COMBAT:
                 if (m_timePlayerBeenInvisible > m_timeCalmDown)
                 {
-                    m_vigilance = e_vigilance.REASEARCH;
+                    m_vigilance = e_vigilance.RESEARCH;
                 }
                 break;
 
@@ -97,6 +106,25 @@ public class AI : MonoBehaviour
                 break;
         }
     }
+
+    void EvaluateMovePattern()
+    {
+        switch (m_movePattern)
+        {
+            case e_movePattern.STATIC:
+                break;
+            case e_movePattern.FOLLOW_PLAYER:
+                if(IsPlayerInRange() && IsPlayerVisible())
+                {
+                    m_agent.SetDestination(m_lastPositionSeen);
+                }
+                break;
+            case e_movePattern.RANDOM:
+                break;
+
+        }
+    }
+
 
     void CheckPlayerVisibility()
     {
@@ -139,6 +167,7 @@ public class AI : MonoBehaviour
     {
         m_transform = gameObject.GetComponent<Transform>();
         m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        m_agent = GetComponent<NavMeshAgent>();
     }
 
     void Start()
@@ -149,7 +178,7 @@ public class AI : MonoBehaviour
 	
 	void Update()
     {
-        MoveHead();
+        //MoveHead();
         CheckPlayerVisibility();
         EvaluateLocomotion();
         EvaluateVigilance();
@@ -171,7 +200,7 @@ public class AI : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (m_isDebug)
+        if (Application.isPlaying && m_isDebug)
         {
             Gizmos.DrawWireSphere(m_transform.position, m_detectionRange);
             if(!IsPlayerVisible() && m_playerHaveBeenSeen)
