@@ -11,6 +11,7 @@ public class Heroin : MonoBehaviour
     [Range(0,500)]
     public float m_jumpThrust;
     public Camera m_camera;
+    public bool m_debugActive;
     
 
     public enum e_CharacterState
@@ -32,7 +33,7 @@ public class Heroin : MonoBehaviour
         MAX
     }
 
-    public e_CharacterState m_caracterState = e_CharacterState.STANDING;
+    public e_CharacterState m_characterState = e_CharacterState.STANDING;
 
     #endregion
 
@@ -51,7 +52,7 @@ public class Heroin : MonoBehaviour
 
     void Update()
     {
-        switch (m_caracterState)
+        switch (m_characterState)
         {
             case e_CharacterState.STANDING:
                 // toutes actions liés à standing
@@ -61,36 +62,36 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Z))
                 {
                     Debug.Log("up arrow key is held down");
-                    m_caracterState = e_CharacterState.FORWARD;
+                    m_characterState = e_CharacterState.FORWARD;
                 }
                 else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
                 {
                     Debug.Log("down arrow key is held down");
-                    m_caracterState = e_CharacterState.BACKWARD;
+                    m_characterState = e_CharacterState.BACKWARD;
                 }
                 else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q))
                 {
                     Debug.Log("left arrow key is held down");
-                    m_caracterState = e_CharacterState.STRAFELEFT;
+                    m_characterState = e_CharacterState.STRAFELEFT;
                 }
                 else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
                 {
                     Debug.Log("right arrow key is held down");
-                    m_caracterState = e_CharacterState.STRAFERIGHT;
+                    m_characterState = e_CharacterState.STRAFERIGHT;
                 }
                 else if (Input.GetKey(KeyCode.Space))
                 {
                     Debug.Log("space arrow key is held down");
-                    m_caracterState = e_CharacterState.JUMPING;
+                    m_characterState = e_CharacterState.JUMPING;
                 }
                 else if (Input.GetKey(KeyCode.A))
                 {
-                    m_caracterState = e_CharacterState.ROTATELEFT;
+                    m_characterState = e_CharacterState.ROTATELEFT;
                     Debug.Log("rotate left key is held down");
                 }
                 else if (Input.GetKey(KeyCode.E))
                 {
-                    m_caracterState = e_CharacterState.ROTATERIGHT;
+                    m_characterState = e_CharacterState.ROTATERIGHT;
                     Debug.Log("rotate right key is held down");
                 }
                 // -> alors e_characterState : new characterState
@@ -108,12 +109,12 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Z))
                 {
                     Debug.Log("up arrow key is held up");
-                    m_caracterState = e_CharacterState.STANDING;
+                    m_characterState = e_CharacterState.STANDING;
                 }
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("space arrow key is held down");
-                    m_caracterState = e_CharacterState.JUMPING;
+                    m_characterState = e_CharacterState.JUMPING;
                 }
                 // -> alors e_characterState : new characterState
                 break;
@@ -129,12 +130,12 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S))
                 {
                     Debug.Log("down arrow key is held up");
-                    m_caracterState = e_CharacterState.STANDING;
+                    m_characterState = e_CharacterState.STANDING;
                 }
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("space arrow key is held down");
-                    m_caracterState = e_CharacterState.JUMPING;
+                    m_characterState = e_CharacterState.JUMPING;
                 }
                 // -> alors e_characterState : new characterState
                 break;
@@ -150,12 +151,12 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.Q))
                 {
                     Debug.Log("left arrow key is held up");
-                    m_caracterState = e_CharacterState.STANDING;
+                    m_characterState = e_CharacterState.STANDING;
                 }
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("space arrow key is held down");
-                    m_caracterState = e_CharacterState.JUMPING;
+                    m_characterState = e_CharacterState.JUMPING;
                 }
                 // -> alors e_characterState : new characterState
                 break;
@@ -171,12 +172,12 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D))
                 {
                     Debug.Log("right arrow key is held up");
-                    m_caracterState = e_CharacterState.STANDING;
+                    m_characterState = e_CharacterState.STANDING;
                 }
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("space arrow key is held down");
-                    m_caracterState = e_CharacterState.JUMPING;
+                    m_characterState = e_CharacterState.JUMPING;
                 }
                 // -> alors e_characterState : new characterState
                 break;
@@ -192,12 +193,12 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     Debug.Log("space arrow key is held down");
-                    m_caracterState = e_CharacterState.DOUBLEJUMPING;
+                    m_characterState = e_CharacterState.DOUBLEJUMPING;
                 }
 
                 else if ((Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))){
                     Debug.Log("dive key is held down");
-                    m_caracterState = e_CharacterState.DIVING;
+                    m_characterState = e_CharacterState.DIVING;
                 }
 
                 
@@ -214,7 +215,7 @@ public class Heroin : MonoBehaviour
 
                 if((Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))){
                     Debug.Log("dive key is held down");
-                    m_caracterState = e_CharacterState.DIVING;
+                    m_characterState = e_CharacterState.DIVING;
                 }
 
 
@@ -230,7 +231,7 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.A))
                 {
                     Debug.Log("rotate left key is held up");
-                    m_caracterState = e_CharacterState.STANDING;
+                    m_characterState = e_CharacterState.STANDING;
                 }
                 // -> alors e_characterState : new characterState
                 break;
@@ -243,7 +244,7 @@ public class Heroin : MonoBehaviour
                 if (Input.GetKeyUp(KeyCode.E))
                 {
                     Debug.Log("rotate right key is held up");
-                    m_caracterState = e_CharacterState.STANDING;
+                    m_characterState = e_CharacterState.STANDING;
                 }
                 // -> alors e_characterState : new characterState
                 break;
@@ -262,6 +263,19 @@ public class Heroin : MonoBehaviour
 
     #region Tools Debug And Utility
 
+    private void OnGUI()
+    {
+        {
+            if (m_debugActive)
+            {
+                GUILayout.Button("Player Debug");
+                GUILayout.Button("Position : " + m_transform.position);
+                GUILayout.Button("Velocity : " + m_rigidbody.velocity);
+                GUILayout.Button("State : " + m_characterState);
+            }
+        }
+    }
+
     #endregion
 
     #region
@@ -273,7 +287,7 @@ public class Heroin : MonoBehaviour
             // Equivalent "Any State" -> Le trigger collision déclanche l'état STANDING
             m_isJumping = false;
             m_isDoubleJumping = false;
-            m_caracterState = e_CharacterState.STANDING;
+            m_characterState = e_CharacterState.STANDING;
         }
     }
 
